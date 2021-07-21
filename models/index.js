@@ -5,9 +5,10 @@ const Tag = require('./Tag');
 const ProductTag = require('./ProductTag');
 
 // Products belongsTo Category
-//will add category_id to Product
+//will add category_id to Product; will set category_id to NULL when category is deleted
 Product.belongsTo(Category, {
   foreignKey: 'category_id',
+  onDelete: 'SET NULL',
 });
 
 
