@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
     });
     //if no category id found, return error message
     if (!catData) {
-      res.status(400).json({message: 'No category foudn with that id.'});
+      res.status(400).json({message: 'No category found with that id.'});
       return;
     }
 
@@ -45,8 +45,22 @@ router.post('/', async (req, res) => {
   };
 });
 
-router.put('/:id', (req, res) => {
-  // update a category by its `id` value
+router.put('/:id', async (req, res) => {
+  try {
+    // update a category by its `id` value
+    const catData = await Category.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!catData) {
+      res.status(400).json({'message': 'No user with that id!'})
+    }
+    res.status(200).json(req.body);
+  } catch (err) {
+    res.status(400).json(err);
+  } 
 });
 
 router.delete('/:id', (req, res) => {
