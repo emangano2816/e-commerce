@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-//POST (i.e., create) Tag Rout
+//POST (i.e., create) Tag Route
 //req.body needs form:
 //   {
 //      "tag_name": "",
@@ -65,10 +65,45 @@ router.post('/', async (req, res) => {
 });
 
 
+//PUT (i.e, update) Tag Route
+router.put('/:id', async (req, res) => {
+  try {
+    // update a tag's name by its `id` value
+    const tag = await Tag.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+    //find all associated product from ProductTag
+    const productTags = await ProductTag.findAll({ where: { tag_id: req.params.id } });
+    //get list of current product_ids
+    const productTagIds = productTags.map(({ product_id }) => product_id);
+    //create filtered list of new product_ids
+    const newProductTags = req.body.productIds
+      .filter((product_id) => !productTagIds.includes(product_id))
+      .map((product_id) => {
+        return {
+          tag_id: req.params.id,
+          product_id,
+        };
+      });
+    //figure out which ones to remove
+    const productTagsToRemove = productTags
+    .filter(({ product_id }) => !req.body.productIds.includes(product_id))
+    .map(({ id }) => id);
 
-router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
+    //run both actions
+    const updatedProductTags = await Promise.all([
+      ProductTag.destroy({ where: { id: productTagsToRemove } }),
+      ProductTag.bulkCreate(newProductTags),
+    ]);
+    res.status(200).json(updatedProductTags);
+  }
+  catch (err) {
+    res.status(400).json(err);
+  }
 });
+
 
 router.delete('/:id', (req, res) => {
   // delete on tag by its `id` value
