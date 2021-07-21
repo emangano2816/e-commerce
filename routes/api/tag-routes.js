@@ -66,6 +66,11 @@ router.post('/', async (req, res) => {
 
 
 //PUT (i.e, update) Tag Route
+//req.body needs form:
+//   {
+//      "tag_name": "",
+//      "productIds":[]
+//    }
 router.put('/:id', async (req, res) => {
   try {
     // update a tag's name by its `id` value
@@ -104,9 +109,27 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-
-router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+//DELETE Tag by ID Route
+router.delete('/:id', async (req, res) => {
+  try{
+    //find tag being deleted
+    const tagBeingDeleted = await Tag.findByPk(req.params.id);
+    //delete tag by id
+    await Tag.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    //if Tag ID doesn't exist return error message; otherwise, return message with deleted Tag
+    if (!tagBeingDeleted) {
+      res.status(400).json({'message': 'No tag found with that ID. Check ID and try again.'});
+    }
+    res.status(200).json([{'message': 'Following tag deleted successfully.'}, {id: tagBeingDeleted.id, tag_name: tagBeingDeleted.tag_name }]);
+  }
+  catch (err) {
+    res.status(400).json(err);
+  }
 });
+
 
 module.exports = router;

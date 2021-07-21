@@ -91,7 +91,7 @@ router.put('/:id', async (req, res) => {
       ProductTag.destroy({ where: { id: productTagsToRemove } }),
       ProductTag.bulkCreate(newProductTags),
     ]);
-    res.json(updatedProductTags);
+    res.status(200).json(updatedProductTags);
   }
   catch (err) {
     // console.log(err);
@@ -100,8 +100,26 @@ router.put('/:id', async (req, res) => {
 });
 
 //DELETE Product by ID
-router.delete('/:id', (req, res) => {
-  // delete one product by its `id` value
+router.delete('/:id', async (req, res) => {
+  try {
+    //find product being deleted
+    const productBeingDeleted = await Product.findByPk(req.params.id);
+    //delete product by its id value
+    await Product.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    //if Product ID doesn't exist return error message; otherwise, return message with deleted Product
+    if (!productBeingDeleted) {
+      res.status(400).json({'message': 'No product found with that ID. Check ID and try again.'});
+    }
+    res.status(200).json([{'message': 'Following product deleted successfully.'}, {id: productBeingDeleted.id, product_name: productBeingDeleted.product_name}]);
+  }
+  catch (err) {
+    res.status(400).json(err);
+  }
 });
+
 
 module.exports = router;
