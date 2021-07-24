@@ -32,7 +32,7 @@ THEN I am able to successfully create, update, and delete data in my database
 ## Summary of Application Functionality
 Sequelize uses information included in the .env file to establish a connection with the MySQL database for this application.  
 
-Prior to seeding the database, the database must be created.  From the mysql command, type, 'source schemas.sql'.  This will create a database called ecommerce_db.  Once the database has been created it can be seeded by typing 'npm run seed' in the terminal command.  Once the database has been seeded, type 'node server.js' in the terminal command window to start the server and to sync the sequelize models with the MySQL database.
+Prior to seeding the database, the database must be created.  From the mysql command, type, 'source db/schemas.sql'.  This will create a database called ecommerce_db.  Once the database has been created it can be seeded by typing 'npm run seed' in the terminal command.  Once the database has been seeded, type 'node server.js' in the terminal command window to start the server and to sync the sequelize models with the MySQL database.
 
 Once the server has been started the routes can be tested using Insomnia Core.  The following routes are available:
 
@@ -67,7 +67,7 @@ For Products:
 
 ## Installation
 
-1. Create DB using db/schemas.sql.  From mysql command type:  source schemas.sql
+1. Create DB using db/schemas.sql.  From mysql command type:  source db/schemas.sql
 2. Install npm dependencies.  From terminal type: npm i
 3. Rename .env.EXAMPLE to .env and update credentials accordingly.
 4. Seed DB using using provided data.  From terminal type: npm run seed
