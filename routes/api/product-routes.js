@@ -27,8 +27,9 @@ router.get('/:id', async (req, res) => {
     //if no product found for supplied ID, return error message; otherwise return product
     if (!productData) {
       res.status(400).json({'message': 'No product found with that ID.'})
-    }
-    res.status(200).json(productData);
+    } else {
+      res.status(200).json(productData);
+    };
   }
   catch (err) {
     res.status(400).json(err);
@@ -49,9 +50,10 @@ router.post('/', async (req, res) => {
       });
       const productTagIds = await ProductTag.bulkCreate(productTagIdArr);
       res.status(200).json(productTagIds);
-    }
-    // if no product tags, just respond
-    res.status(200).json(product);
+    } else {
+      // if no product tags, just respond
+      res.status(200).json(product);
+    };
   }
   catch (err) {
     console.log(err);
@@ -67,7 +69,7 @@ router.put('/:id', async (req, res) => {
       where: {
         id: req.params.id,
       },
-    })
+    });
     // find all associated tags from ProductTag
     const productTags = await ProductTag.findAll({ where: { product_id: req.params.id } });
     // get list of current tag_ids
@@ -113,8 +115,9 @@ router.delete('/:id', async (req, res) => {
     //if Product ID doesn't exist return error message; otherwise, return message with deleted Product
     if (!productBeingDeleted) {
       res.status(400).json({'message': 'No product found with that ID. Check ID and try again.'});
+    } else {
+      res.status(200).json([{'message': 'Following product deleted successfully.'}, {id: productBeingDeleted.id, product_name: productBeingDeleted.product_name}]);
     }
-    res.status(200).json([{'message': 'Following product deleted successfully.'}, {id: productBeingDeleted.id, product_name: productBeingDeleted.product_name}]);
   }
   catch (err) {
     res.status(400).json(err);

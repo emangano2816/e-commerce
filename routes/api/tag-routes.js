@@ -26,8 +26,9 @@ router.get('/:id', async (req, res) => {
     });
     if (!tagData) {
       res.status(400).json({'message': 'No tag found with that ID.'})
+    } else {
+      res.status(200).json(tagData);
     }
-    res.status(200).json(tagData);
   }
   catch (err) {
     res.status(400).json(err);
@@ -54,9 +55,10 @@ router.post('/', async (req, res) => {
       });
       const tagProductIds = await ProductTag.bulkCreate(tagProductIdArr);
       res.status(200).json(tagProductIds);
-    };
-    //if tag has no product, just respond
-    res.status(200).json(tag)
+    } else {
+      //if tag has no product, just respond
+      res.status(200).json(tag)
+    }
   }
   catch (err) {
     console.log(err);
@@ -123,8 +125,9 @@ router.delete('/:id', async (req, res) => {
     //if Tag ID doesn't exist return error message; otherwise, return message with deleted Tag
     if (!tagBeingDeleted) {
       res.status(400).json({'message': 'No tag found with that ID. Check ID and try again.'});
+    } else {
+      res.status(200).json([{'message': 'Following tag deleted successfully.'}, {id: tagBeingDeleted.id, tag_name: tagBeingDeleted.tag_name }]);
     }
-    res.status(200).json([{'message': 'Following tag deleted successfully.'}, {id: tagBeingDeleted.id, tag_name: tagBeingDeleted.tag_name }]);
   }
   catch (err) {
     res.status(400).json(err);

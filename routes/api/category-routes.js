@@ -26,8 +26,9 @@ router.get('/:id', async (req, res) => {
     if (!catData) {
       res.status(400).json({message: 'No category found with that id.'});
       return;
+    } else {
+      res.status(200).json(catData);
     }
-    res.status(200).json(catData);
   } catch (err) {
     res.status(400).json(err);
   }
@@ -58,8 +59,9 @@ router.put('/:id', async (req, res) => {
     //if category ID doesn't exist return error message; otherwise, return message with updated category
     if (!catData) {
       res.status(400).json({'message': 'No category with that ID. Check ID and try again.'});
+    } else {
+      res.status(200).json([{'message': 'Category updated successfully.'}, {id: req.body.id, category_name: req.body.category_name}]);
     }
-    res.status(200).json([{'message': 'Category updated successfully.'}, {id: req.body.id, category_name: req.body.category_name}]);
   } catch (err) {
     res.status(400).json(err);
   } 
@@ -78,8 +80,9 @@ router.delete('/:id', async (req, res) => {
     //if category ID doesn't exist return error message; otherwise, return message with deleted category
     if (!catDataDeleted) {
       res.status(400).json({'message': 'No category with that ID. Check ID and try again.'});
+    } else {
+      res.status(200).json([{'message': 'Category deleted successfully.'}, {id: catDataDeleted.id, category_name: catDataDeleted.category_name}]);
     }
-    res.status(200).json([{'message': 'Category deleted successfully.'}, {id: catDataDeleted.id, category_name: catDataDeleted.category_name}]);
   }
   catch (err) {
     res.status(400).json(err);
